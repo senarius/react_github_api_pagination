@@ -72,7 +72,7 @@ const Repo = () => {
 
   const [debouncedValue, setDebouncedValue, { delay }] = useDynamicDebounce('python', {
 		defaultDelay: 500,
-		delayFunction: (averageGap) => Math.floor(averageGap + 275),
+		delayFunction: (averageGap) => Math.floor(averageGap + 475),
 	});
 
   const { data, error } = useSWR<Meta, Error>(
