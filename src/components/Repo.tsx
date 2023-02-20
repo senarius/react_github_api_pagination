@@ -46,7 +46,7 @@ const Repo = () => {
   const [order, setOrder] = useState("desc");
   const [limit, setLimit] = useState(5);
   const [total, setTotal] = useState(0);
-  const [value, setValue] = useState("");
+  const [searchVal, setsearchVal] = useState("");
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<Meta>();
   const GIT_API_LIMIT = 1000;
@@ -70,23 +70,23 @@ const Repo = () => {
   };
 
   useEffect(() => {
-    if (value) {
+    if (searchVal) {
       setLoading(true);
 
-      const delay = setTimeout(() => fetchData(value), 2000);
+      const delay = setTimeout(() => fetchData(searchVal), 2000);
 
       return () => clearTimeout(delay);
     } else {
       setData(undefined);
     }
-  }, [value, page]);
+  }, [searchVal, page]);
 
   return (
     <div className="mb-50">
       <form>
         <label className="inline-flex">
           <input 
-          value={value} onChange={(e) => setValue(e.target.value)} placeholder="Enter your keyword to search" type="text" className="w-300"/>
+          value={searchVal} onChange={(e) => setsearchVal(e.target.value)} placeholder="Enter your keyword to search" type="text" className="w-300"/>
           <span className="flex items-center pr-2">
             <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30"
               height="30" viewBox="0 0 30 30">
