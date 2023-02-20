@@ -84,9 +84,9 @@ const Repo = () => {
   return (
     <div className="mb-50">
       <form>
-        <label className="inline-flex">
+        <label className="inline-flex border w-620-px">
           <input 
-          value={searchVal} onChange={(e) => setsearchVal(e.target.value)} placeholder="Enter your keyword to search" type="text" className="w-300"/>
+          value={searchVal} onChange={(e) => setsearchVal(e.target.value)} placeholder="Enter your keyword to search" type="text" className="w-full"/>
           <span className="flex items-center pr-2">
             <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30"
               height="30" viewBox="0 0 30 30">
