@@ -6,7 +6,6 @@ type Listprops = {
 };
 
 const RepoList: React.FC<Listprops> = ({ repos }) => {
-  console.log(repos)
   return (
     <div>
       {

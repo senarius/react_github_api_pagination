@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
-import useSWR from "swr";
 import axios from "axios";
-import { useDynamicDebounce } from 'react-dynamic-debounce';
 import RepoList from "./RepoList";
 import Pagination from "./Pagination";
 
@@ -48,43 +46,47 @@ const Repo = () => {
   const [order, setOrder] = useState("desc");
   const [limit, setLimit] = useState(5);
   const [total, setTotal] = useState(0);
+  const [value, setValue] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState<Meta>();
   const GIT_API_LIMIT = 1000;
 
-  const fetcher:any = async (url: string) => {
+  const fetchData = async (q:string) => {
+    try {
+      const res = await axios.get(`https://api.github.com/search/repositories?q=${q}&sort=${sortBy}&order=${order}&per_page=${limit}&page=${page}`);
+      setLoading(false);
+      setData(res.data);
 
-    const res = await axios.get(url, 
-      {
-        headers: {
-          Accept: 'application/vnd.github.text-match+json',
-          'Content-Type': 'application/json'
-        },
-      },
-    )
-    if ((res.data as Meta).total_count) {
-      if ((res.data as Meta).total_count > 1000) {
-        setTotal(GIT_API_LIMIT);
-      } else {
-        setTotal((res.data as Meta).total_count);
+      if ((res.data as Meta).total_count) {
+        if ((res.data as Meta).total_count > 1000) {
+          setTotal(GIT_API_LIMIT);
+        } else {
+          setTotal((res.data as Meta).total_count);
+        }
       }
+    } catch (err) {
+      setLoading(false);
     }
-    return res.data;
   };
 
-  const [debouncedValue, setDebouncedValue, { delay }] = useDynamicDebounce('python', {
-		defaultDelay: 500,
-		delayFunction: (averageGap) => Math.floor(averageGap + 475),
-	});
+  useEffect(() => {
+    if (value) {
+      setLoading(true);
 
-  const { data, error } = useSWR<Meta, Error>(
-    `https://api.github.com/search/repositories?q=${debouncedValue}&sort=${sortBy}&order=${order}&per_page=${limit}&page=${page}`,
-    fetcher
-  );
+      const delay = setTimeout(() => fetchData(value), 2000);
+
+      return () => clearTimeout(delay);
+    } else {
+      setData(undefined);
+    }
+  }, [value, page]);
 
   return (
     <div className="mb-50">
       <form>
         <label className="inline-flex">
-          <input onChange={(e) => setDebouncedValue(e.target.value)} defaultValue={debouncedValue} placeholder="Enter your keyword to search" type="text" className="w-300"/>
+          <input 
+          value={value} onChange={(e) => setValue(e.target.value)} placeholder="Enter your keyword to search" type="text" className="w-300"/>
           <span className="flex items-center pr-2">
             <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30"
               height="30" viewBox="0 0 30 30">
@@ -95,6 +97,7 @@ const Repo = () => {
           </span>
         </label>
       </form>
+      {loading && <div>loading...</div>}
       <RepoList repos={data?.items as Repo[]}/>
       <Pagination
         page={page}

@@ -6,7 +6,6 @@ type ItemProps = {
 };
 
 export const RepoItem: React.FC<ItemProps> = ({ repo }) => {
-  console.log(repo)
   return (
     <div key={repo.id} className="container">
       <div className="card">
