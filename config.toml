@@ -1,0 +1,4 @@
+[[IgnoredVulns]]
+id = "GHSA-rp65-9cf3-cjxr"
+# ignoreUntil = 2023-03-28 # Optional exception expiry date
+reason = "temporary work aorund"
